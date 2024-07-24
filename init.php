@@ -14,88 +14,88 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
-final class initEntity
-{
-    /**
-     * Plugin Version
-     *
-     * @since 1
-     * @var string The plugin version.
-     */
-    public const VERSION = '1';
-
-
-    /**
-     * Minimum PHP Version
-     *
-     * @since 1.2.0
-     * @var string Minimum PHP version required to run the plugin.
-     */
-    public const MINIMUM_PHP_VERSION = '7.4';
-
-    /**
-     * Constructor
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    public function __construct()
+if (!class_exists('initEntity')) {
+    final class initEntity
     {
+        /**
+         * Plugin Version
+         *
+         * @since 1
+         * @var string The plugin version.
+         */
+        public const VERSION = '1';
 
-        // Init Plugin
-        add_action('plugins_loaded', array( $this, 'init' ));
-    }
 
-    /**
-     * Initialize the plugin
-     *
-     * Checks for basic plugin requirements, if one check fail don't continue,
-     * if all check have passed include the plugin class.
-     *
-     * Fired by `plugins_loaded` action hook.
-     *
-     * @since 1.2.0
-     * @access public
-     */
-    public function init()
-    {
+        /**
+         * Minimum PHP Version
+         *
+         * @since 1.2.0
+         * @var string Minimum PHP version required to run the plugin.
+         */
+        public const MINIMUM_PHP_VERSION = '7.4';
 
-        // Check for required PHP version
-        if (version_compare(PHP_VERSION, self::MINIMUM_PHP_VERSION, '<')) {
-            add_action('admin_notices', array( $this, 'admin_notice_minimum_php_version' ));
-            return;
+        /**
+         * Constructor
+         *
+         * @since 1.0.0
+         * @access public
+         */
+        public function __construct()
+        {
+
+            // Init Plugin
+            add_action('plugins_loaded', array( $this, 'init' ));
         }
 
-        // Once we get here, We have passed all validation checks so we can safely include our plugin
-        require_once('plugin.php');
-    }
+        /**
+         * Initialize the plugin
+         *
+         * Checks for basic plugin requirements, if one check fail don't continue,
+         * if all check have passed include the plugin class.
+         *
+         * Fired by `plugins_loaded` action hook.
+         *
+         * @since 1.2.0
+         * @access public
+         */
+        public function init()
+        {
 
-    /**
-     * Admin notice
-     *
-     * Warning when the site doesn't have a minimum required PHP version.
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    public function admin_notice_minimum_php_version()
-    {
-        if (isset($_GET['activate'])) {
-            unset($_GET['activate']);
+            // Check for required PHP version
+            if (version_compare(PHP_VERSION, self::MINIMUM_PHP_VERSION, '<')) {
+                add_action('admin_notices', array( $this, 'admin_notice_minimum_php_version' ));
+                return;
+            }
+
+            // Once we get here, We have passed all validation checks so we can safely include our plugin
+            require_once('plugin.php');
         }
 
-        $message = sprintf(
-            /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
-            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'ovs'),
-            '<strong>' . esc_html__('OVS', 'ovs') . '</strong>',
-            '<strong>' . esc_html__('PHP', 'ovs') . '</strong>',
-            self::MINIMUM_PHP_VERSION
-        );
+        /**
+         * Admin notice
+         *
+         * Warning when the site doesn't have a minimum required PHP version.
+         *
+         * @since 1.0.0
+         * @access public
+         */
+        public function admin_notice_minimum_php_version()
+        {
+            if (isset($_GET['activate'])) {
+                unset($_GET['activate']);
+            }
 
-        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+            $message = sprintf(
+                /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
+                esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'ovs'),
+                '<strong>' . esc_html__('OVS', 'ovs') . '</strong>',
+                '<strong>' . esc_html__('PHP', 'ovs') . '</strong>',
+                self::MINIMUM_PHP_VERSION
+            );
+
+            printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+        }
     }
 }
-
 // Instantiate Ovs.
 new initEntity();
