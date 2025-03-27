@@ -25,6 +25,7 @@ if (!class_exists('Post_Type')) {
         protected $id; // Identifiant du postType
         protected $name = ''; // Nom du postType afficher dans l'admin
         protected $icon = 'dashicons-admin-page'; // Icon du postType dans le menu de l'admin
+        protected $publicly_queryable = 'true'; 
         protected $taxonomies = array(); // Les Taxonomies liées au postType
         protected $fields = [];
 
@@ -54,6 +55,15 @@ if (!class_exists('Post_Type')) {
         public function getIcon()
         {
             return $this->icon;
+        }
+        protected function setPubliclyQueryable($value)
+        {
+            $this->publicly_queryable = $value;
+            return $this->publicly_queryable;
+        }
+        public function getPubliclyQueryable()
+        {
+            return $this->publicly_queryable;
         }
         protected function setTaxonomies($value = array())
         {
@@ -87,12 +97,13 @@ if (!class_exists('Post_Type')) {
          * Post_Type constructor
          */
 
-        public function __construct($id, $name, $icon, $taxonomies = array(), $fields = false)
+        public function __construct($id, $name, $icon, $publicly_queryable, $taxonomies = array(), $fields = false)
         {
             // Initialise les variable
             $this->setName($name);
             $this->setId($id);
             $this->setIcon(empty($icon) ? $this->getIcon() : $icon);
+            $this->setPubliclyQueryable($publicly_queryable);
             $this->setTaxonomies($taxonomies);
             if($fields) {
                 $this->setFields($fields);
@@ -131,7 +142,7 @@ if (!class_exists('Post_Type')) {
             $args = array(
                 'labels' => $labels,
                 'menu_icon' => $this->getIcon(),
-                'public' => true,
+                'public' => $this->getPubliclyQueryable(),
                 'show_ui' => true,
                 'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
             );
