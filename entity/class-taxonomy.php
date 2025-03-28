@@ -131,7 +131,7 @@ if (!class_exists('Taxonomy')) {
             $this->setFields(array_key_exists('fields', $settings) ? $settings['fields'] : []);
             $this->addTaxonomy();
 
-            add_filter('taxonomy_template', 'archiveTemplate');
+            add_filter('taxonomy_template',  [$this, 'archiveTemplate']);
 
         }
         public function addTaxonomy()
@@ -166,21 +166,20 @@ if (!class_exists('Taxonomy')) {
                 foreach ($terms as $term) {
                     wp_delete_term($term->term_id, $this->getId());
                 }
-
             });
         }
-
         // Template Pour l'archive de la taxonomie
 
-        public function archiveTemplate()
+        public function archiveTemplate($default_template)
         {
-            $template = PATH . '/templates/taxonomy-' . $this->getId() . '.php';
+            $template = get_stylesheet_directory() . '/templates/taxonomy-' . $this->getPostId() . '_' . $this->getId() . '.php';
 
 
             if (file_exists($template)) {
                 return $template;
             }
-
+        
+            return $default_template;
         }
     }
 }
