@@ -25,9 +25,10 @@ if (!class_exists('Post_Type')) {
         protected $id; // Identifiant du postType
         protected $name = ''; // Nom du postType afficher dans l'admin
         protected $icon = 'dashicons-admin-page'; // Icon du postType dans le menu de l'admin
-        protected $publicly_queryable = 'true'; 
         protected $taxonomies = array(); // Les Taxonomies liées au postType
         protected $fields = [];
+        protected $publicly_queryable = true; 
+        protected $has_archive = true; 
 
         protected function setName($value)
         {
@@ -65,6 +66,17 @@ if (!class_exists('Post_Type')) {
         {
             return $this->publicly_queryable;
         }
+
+        protected function setHasArchive($value)
+        {
+            $this->has_archive = $value;
+            return $this->has_archive;
+        }
+        public function getHasArchive()
+        {
+            return $this->has_archive;
+        }
+
         protected function setTaxonomies($value = array())
         {
             $this->taxonomies = $value;
@@ -97,16 +109,32 @@ if (!class_exists('Post_Type')) {
          * Post_Type constructor
          */
 
-        public function __construct($id, $name, $icon, $publicly_queryable, $taxonomies = array(), $fields = false)
+        public function __construct(array $args = [])
         {
+
+            $defaults = [
+                'id' => '',
+                'name' => '',
+                'icon' => 'dashicons-admin-page',
+                'publicly_queryable' => true,
+                'has_archive' => true,
+                'taxonomies' => [],
+                'fields' => []
+            ];
+        
+            // Fusionne les valeurs par défaut avec celles fournies
+            $args = array_merge($defaults, $args);
+
             // Initialise les variable
-            $this->setName($name);
-            $this->setId($id);
-            $this->setIcon(empty($icon) ? $this->getIcon() : $icon);
-            $this->setPubliclyQueryable($publicly_queryable);
-            $this->setTaxonomies($taxonomies);
-            if($fields) {
-                $this->setFields($fields);
+            $this->setId($args['id']);
+            $this->setName($args['name']);
+            $this->setIcon(empty($args['icon']) ? $this->getIcon() : $args['icon']);
+            $this->setPubliclyQueryable($args['publicly_queryable']);
+            $this->setHasArchive($args['has_archive']);
+            $this->setTaxonomies($args['taxonomies']);
+
+            if($args['fields']) {
+                $this->setFields($args['fields']);
             }
 
             // se déclenche après la fin du chargement de WordPress mais avant l'envoi des en-têtes
@@ -142,8 +170,9 @@ if (!class_exists('Post_Type')) {
             $args = array(
                 'labels' => $labels,
                 'menu_icon' => $this->getIcon(),
-                'public' => $this->getPubliclyQueryable(),
+                'publicly_queryable' => $this->getPubliclyQueryable(),
                 'show_ui' => true,
+                'has_archive' => $this->getHasArchive(),
                 'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
             );
 
