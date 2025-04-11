@@ -19,143 +19,129 @@ if (!class_exists('Taxonomy')) {
     class Taxonomy
     {
         protected $id = ''; // Identifiant de la taxonomy
-        protected $name = ''; // Nom de la taxonomy afficher dans l'admin
+        protected $name = ''; // Nom de la taxonomy affiché dans l'admin
         protected $parent = true; // Active le système de hiérarchie de la taxonomy
+        protected $public = true; // Rend la taxonomie publique
         protected $postId = ''; // l'id du postType lié à la taxonomy
         protected $fields = [];
-        /**
-         * Get the value of id
-         */
+
         public function getId()
         {
             return $this->id;
         }
 
-        /**
-         * Set the value of id
-         *
-         * @return  self
-         */
         public function setId($id)
         {
             $this->id = $id;
-
             return $this;
         }
 
-        /**
-         * Get the value of name
-         */
         public function getName()
         {
             return $this->name;
         }
 
-        /**
-         * Set the value of name
-         *
-         * @return  self
-         */
         public function setName($name)
         {
             $this->name = $name;
-
             return $this;
         }
 
-        /**
-         * Get the value of parent
-         */
         public function getParent()
         {
             return $this->parent;
         }
 
-        /**
-         * Set the value of parent
-         *
-         * @return  self
-         */
         public function setParent($parent)
         {
             $this->parent = $parent;
-
             return $this;
         }
 
-        /**
-         * Get the value of postId
-         */
+        public function getPublic()
+        {
+            return $this->public;
+        }
+
+        public function setPublic($public)
+        {
+            $this->public = $public;
+            return $this;
+        }
+
         public function getPostId()
         {
             return $this->postId;
         }
 
-        /**
-         * Set the value of postId
-         *
-         * @return  self
-         */
         public function setPostId($postId)
         {
             $this->postId = $postId;
-
             return $this;
         }
-        /**
-         * Get the value of fields
-         */
+
         public function getFields()
         {
             return $this->fields;
         }
 
-        /**
-         * Set the value of fields
-         *
-         * @return  self
-         */
         public function setFields($fields)
         {
             $this->fields = $fields;
-
             return $this;
         }
 
-        public function __construct($taxonomy, $settings, $postId)
+        public function __construct($taxonomy, $settings = [], $postId)
         {
+            $defaults = [
+                'name' => $taxonomy,
+                'parent' => true,
+                'public' => true,
+                'fields' => []
+            ];
+
+            // Fusionne les options par défaut avec celles passées
+            $settings = array_merge($defaults, $settings);
+
             $this->setId($taxonomy);
-            $this->setName(array_key_exists('name', $settings) ? $settings['name'] : $taxonomy);
+            $this->setName($settings['name']);
             $this->setPostId($postId);
-            $this->setParent(array_key_exists('parent', $settings) ? $settings['parent'] : true);
-            $this->setFields(array_key_exists('fields', $settings) ? $settings['fields'] : []);
+            $this->setParent($settings['parent']);
+            $this->setPublic($settings['public']);
+            $this->setFields($settings['fields']);
+
             $this->addTaxonomy();
 
-            add_filter('taxonomy_template',  [$this, 'archiveTemplate']);
-
+            add_filter('taxonomy_template', [$this, 'archiveTemplate']);
         }
+
         public function addTaxonomy()
         {
+            register_taxonomy(
+                $this->getPostId() . '_' . $this->getId(),
+                $this->getPostId(),
+                array(
+                    'label' => esc_html__($this->getName(), 'ovs'),
+                    'hierarchical' => $this->getParent(),
+                    'public' => $this->getPublic(),
+                    'show_ui' => true
+                )
+            );
 
-            register_taxonomy($this->getPostId() . '_' . $this->getId(), $this->getPostId(), array(
-                'label' =>  esc_html__($this->getName(), 'ovs'),
-                'hierarchical' => $this->getParent(),
-            ));
-
-            if(!empty($this->getFields())) {
+            if (!empty($this->getFields())) {
                 $taxoId = $this->getPostId() . '_' . $this->getId();
                 $meta = new Meta_Taxonomy($taxoId, $this->getFields());
             }
-
         }
+
         public function editTaxonomy($id, $name, $parent = true, $fields = [])
         {
-
             $this->setId($id);
             $this->setName($name);
             $this->setParent($parent);
             $this->setFields($fields);
         }
+
         public function removeTaxonomy()
         {
             add_action('init', function () {
@@ -168,17 +154,15 @@ if (!class_exists('Taxonomy')) {
                 }
             });
         }
-        // Template Pour l'archive de la taxonomie
 
         public function archiveTemplate($default_template)
         {
             $template = get_stylesheet_directory() . '/templates/taxonomy-' . $this->getPostId() . '_' . $this->getId() . '.php';
 
-
             if (file_exists($template)) {
                 return $template;
             }
-        
+
             return $default_template;
         }
     }
