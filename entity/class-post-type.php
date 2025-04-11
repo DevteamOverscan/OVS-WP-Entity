@@ -201,7 +201,7 @@ if (!class_exists('Post_Type')) {
 
 
 
-        public function singleTemplate()
+        public function singleTemplate($single)
         {
             $template = PATH . '/templates/posts/' . $this->getId() . '.php';
 
@@ -211,6 +211,8 @@ if (!class_exists('Post_Type')) {
                 return $template;
 
             }
+
+            return $single;
 
         }
         public function removePostType()
