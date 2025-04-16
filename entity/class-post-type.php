@@ -186,7 +186,7 @@ if (!class_exists('Post_Type')) {
         {
             if(count($this->getTaxonomies()) > 0) {
                 foreach ($this->getTaxonomies() as $key => $taxo) {
-                    new Taxonomy($key, $taxo, $this->getId());
+                    new Taxonomy($key, $this->getId(), $taxo);
                 }
             }
         }
