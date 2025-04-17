@@ -13,6 +13,7 @@
 $roots_includes = array(
         //----------Fields--------------
         'text',
+        'textarea',
         'date',
         'hour',
         'select',
