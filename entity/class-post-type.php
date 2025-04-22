@@ -219,7 +219,8 @@ if (!class_exists('Post_Type')) {
 
         public function singleTemplate($single)
         {
-            $template = PATH . '/templates/posts/' . $this->getId() . '.php';
+            
+            $template =  get_stylesheet_directory() . '/templates/posts/' . $this->getId() . '.php';
 
             // Vérifiez si le fichier existe
             if (file_exists($template)) {
@@ -231,6 +232,7 @@ if (!class_exists('Post_Type')) {
             return $single;
 
         }
+
         public function removePostType()
         {
             add_action('init', function () {
