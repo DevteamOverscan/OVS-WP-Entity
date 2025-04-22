@@ -25,6 +25,7 @@ if (!class_exists('Post_Type')) {
         protected $id; // Identifiant du postType
         protected $name = ''; // Nom du postType afficher dans l'admin
         protected $icon = 'dashicons-admin-page'; // Icon du postType dans le menu de l'admin
+        protected $rewriteSlug = '';
         protected $taxonomies = array(); // Les Taxonomies liées au postType
         protected $fields = [];
         protected $publicly_queryable = true; 
@@ -56,6 +57,15 @@ if (!class_exists('Post_Type')) {
         public function getIcon()
         {
             return $this->icon;
+        }
+        protected function setRewriteSlug($value)
+        {
+            $this->rewriteSlug = $value;
+            return $this->rewriteSlug;
+        }
+        public function getRewriteSlug()
+        {
+            return $this->rewriteSlug;
         }
         protected function setPubliclyQueryable($value)
         {
@@ -129,6 +139,7 @@ if (!class_exists('Post_Type')) {
             $this->setId($args['id']);
             $this->setName($args['name']);
             $this->setIcon(empty($args['icon']) ? $this->getIcon() : $args['icon']);
+            $this->setRewriteSlug(!empty($args['rewriteSlug']) ? $args['rewriteSlug'] : "");
             $this->setPubliclyQueryable($args['publicly_queryable']);
             $this->setHasArchive($args['has_archive']);
             $this->setTaxonomies($args['taxonomies']);
@@ -175,6 +186,11 @@ if (!class_exists('Post_Type')) {
                 'has_archive' => $this->getHasArchive(),
                 'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
             );
+            if (!empty($this->getRewriteSlug())) {
+                $args['rewrite'] = array(
+                    'slug' => $this->getRewriteSlug(),
+                );
+            }
 
             register_post_type($this->getId(), $args);
 
