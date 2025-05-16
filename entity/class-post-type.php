@@ -24,6 +24,7 @@ if (!class_exists('Post_Type')) {
 
         protected $id; // Identifiant du postType
         protected $name = ''; // Nom du postType afficher dans l'admin
+        protected $isFeminin = false; // Masculin par défaut
         protected $icon = 'dashicons-admin-page'; // Icon du postType dans le menu de l'admin
         protected $rewriteSlug = '';
         protected $taxonomies = array(); // Les Taxonomies liées au postType
@@ -48,6 +49,16 @@ if (!class_exists('Post_Type')) {
         public function getId()
         {
             return $this->id;
+        }
+        public function isFeminin(): bool
+        {
+            return $this->isFeminin;
+        }
+
+        public function setIsFeminin(bool $isFeminin): self
+        {
+            $this->isFeminin = $isFeminin;
+            return $this;
         }
         protected function setIcon($value)
         {
@@ -125,6 +136,7 @@ if (!class_exists('Post_Type')) {
             $defaults = [
                 'id' => '',
                 'name' => '',
+                'isFeminin' => false,
                 'icon' => 'dashicons-admin-page',
                 'publicly_queryable' => true,
                 'has_archive' => true,
@@ -138,6 +150,7 @@ if (!class_exists('Post_Type')) {
             // Initialise les variable
             $this->setId($args['id']);
             $this->setName($args['name']);
+            $this->setIsFeminin($args['isFeminin']);
             $this->setIcon(empty($args['icon']) ? $this->getIcon() : $args['icon']);
             $this->setRewriteSlug(!empty($args['rewriteSlug']) ? $args['rewriteSlug'] : "");
             $this->setPubliclyQueryable($args['publicly_queryable']);
@@ -165,19 +178,41 @@ if (!class_exists('Post_Type')) {
 
         public function register()
         {
-            $labels = array(
-                'name' => esc_html__($this->getName(), 'ovs'),
-                'singular_name' => esc_html__($this->getName(), 'ovs'),
+            $feminin = $this->isFeminin();
+            $name = $this->getName();
+            $name_lower = mb_strtolower($name); // Pour utilisation dans les libellés
+        
+            $labels = [
+                'name' => esc_html__($name, 'ovs'),
+                'singular_name' => esc_html__($name, 'ovs'),
                 'add_new' => esc_html__('Ajouter', 'ovs'),
-                'add_new_item' => esc_html__('Ajouter un ' . $this->getName(), 'ovs'),
-                'edit_item' => esc_html__('Edit ' . $this->getName(), 'ovs'),
-                'new_item' => esc_html__('Nouveau ' . $this->getName(), 'ovs'),
-                'view_item' => esc_html__('Voir l\'élément ' . $this->getName(), 'ovs'),
-                'search_items' => esc_html__('Rechercher un ' . $this->getName(), 'ovs'),
-                'not_found' => esc_html__('Aucuns ' . $this->getName() . ' trouvés', 'ovs'),
-                'not_found_in_trash' => esc_html__('Aucuns ' . $this->getName() . ' trouvés dans la corbeille', 'ovs'),
-            );
-
+                'add_new_item' => $feminin
+                    ? esc_html__('Ajouter une ' . $name_lower, 'ovs')
+                    : esc_html__('Ajouter un ' . $name_lower, 'ovs'),
+                'edit_item' => $feminin
+                    ? esc_html__('Modifier la ' . $name_lower, 'ovs')
+                    : esc_html__('Modifier le ' . $name_lower, 'ovs'),
+                'new_item' => $feminin
+                    ? esc_html__('Nouvelle ' . $name_lower, 'ovs')
+                    : esc_html__('Nouveau ' . $name_lower, 'ovs'),
+                'view_item' => $feminin
+                    ? esc_html__('Voir la ' . $name_lower, 'ovs')
+                    : esc_html__('Voir le ' . $name_lower, 'ovs'),
+                'search_items' => $feminin
+                    ? esc_html__('Rechercher des ' . $name_lower, 'ovs')
+                    : esc_html__('Rechercher des ' . $name_lower, 'ovs'),
+                'not_found' => $feminin
+                    ? esc_html__('Aucune ' . $name_lower . ' trouvée', 'ovs')
+                    : esc_html__('Aucun ' . $name_lower . ' trouvé', 'ovs'),
+                'not_found_in_trash' => $feminin
+                    ? esc_html__('Aucune ' . $name_lower . ' dans la corbeille', 'ovs')
+                    : esc_html__('Aucun ' . $name_lower . ' dans la corbeille', 'ovs'),
+                'menu_name' => esc_html__($name, 'ovs'),
+                'all_items' => $feminin
+                    ? esc_html__('Toutes les ' . $name_lower, 'ovs')
+                    : esc_html__('Tous les ' . $name_lower, 'ovs'),
+            ];
+        
             $args = array(
                 'labels' => $labels,
                 'menu_icon' => $this->getIcon(),
