@@ -214,45 +214,44 @@ if (!class_exists('MetaBox')) {
         }
 
         public function registerRestMeta() {
-            add_action('rest_api_init', function() {
-                if ($this->getFields()) {
-                    foreach ($this->getFields() as $field) {
-                        if (!empty($field['id'])) {
-                            // Détection du type de champ pour REST
-                            $type = 'string'; // par défaut
-                            if (!empty($field['rest_type'])) {
-                                $type = $field['rest_type'];
-                            } elseif (!empty($field['type'])) {
-                                // Auto-détection basique
-                                switch ($field['type']) {
-                                    case 'checkbox':
-                                    case 'boolean':
-                                        $type = 'boolean';
-                                        break;
-                                    case 'number':
-                                        $type = 'number';
-                                        break;
-                                    case 'array':
-                                        $type = 'array';
-                                        break;
-                                    case 'text':
-                                    case 'textarea':
-                                    default:
-                                        $type = 'string';
-                                        break;
-                                }
+            if ($this->getFields()) {
+                foreach ($this->getFields() as $field) {
+                    if (!empty($field['id'])) {
+                        // Détection du type de champ pour REST
+                        $type = 'string'; // par défaut
+                        if (!empty($field['rest_type'])) {
+                            $type = $field['rest_type'];
+                        } elseif (!empty($field['type'])) {
+                            // Auto-détection basique
+                            switch ($field['type']) {
+                                case 'checkbox':
+                                case 'boolean':
+                                    $type = 'boolean';
+                                    break;
+                                case 'number':
+                                    $type = 'number';
+                                    break;
+                                case 'array':
+                                    $type = 'array';
+                                    break;
+                                case 'text':
+                                case 'textarea':
+                                default:
+                                    $type = 'string';
+                                    break;
                             }
-            
-                            register_post_meta($this->post_type, $field['id'], [
-                                'show_in_rest' => true,
-                                'single' => true,
-                                'type' => $type,
-                                'auth_callback' => '__return_true'
-                            ]);
+                            
                         }
+        
+                        register_post_meta($this->post_type, $field['id'], [
+                            'show_in_rest' => true,
+                            'single' => true,
+                            'type' => $type,
+                            'auth_callback' => '__return_true'
+                        ]);
                     }
                 }
-            });
+            }
         }
         
     }
