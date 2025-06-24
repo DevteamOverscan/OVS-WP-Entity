@@ -219,6 +219,7 @@ if (!class_exists('Post_Type')) {
                 'publicly_queryable' => $this->getPubliclyQueryable(),
                 'show_ui' => true,
                 'has_archive' => $this->getHasArchive(),
+                'show_in_rest' => true,
                 'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
             );
             if (!empty($this->getRewriteSlug())) {
