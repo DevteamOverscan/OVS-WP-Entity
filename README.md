@@ -1,18 +1,17 @@
-# OVS WP Entity
-## Installation
-Vous avez la possibiliter d'installer le plugin : 
- - soit comme un plugin classic (dans le dossier wp-content/plugins)
- - soit comme un plugin obligatiore (dans le dossier wp-content/mu-plugins)
+# OVS-WP-Setup
 
-Si vous choississez la 2eme option, vous devez déclarer le plugin afin de l'activer : 
+## À effetuer si vous n'utilisez pas le boiler de Overscan
+
+Dans le dossier "mu-plugins" créer un fichier _"ovs.php"_. Ajouter le code suivant à l'intérieur du fichier nouvellement créé.
+
 ```php
 <?php
 /**
  * Plugin Name: Ovs
- * Description: Plugin prsonnalisé d'Overscan pour Wordpress
+ * Description: Plugin personnalisé d'Overscan pour Wordpress
  * Plugin URI:  https://www.overscan.com/
  * Version:     1
- * Author:      Clément Vacheron
+ * Author:      Overscan
  * Author URI:  https://www.overscan.com/
  * Text Domain: ovs
  * License: GPL v3 or later
@@ -22,7 +21,7 @@ Si vous choississez la 2eme option, vous devez déclarer le plugin afin de l'act
 /**
  *
  * @package OVS
- * @author Clément Vacheron
+ * @author Overscan
  * @link https://www.overscan.com
  */
 if (!defined('ABSPATH')) {
@@ -39,4 +38,4 @@ if(get_option('custom_plugins') !== false) {
         }
     }
 }
-````
+```

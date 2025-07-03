@@ -3,7 +3,7 @@
 /**
  * Class Entity
  * @package OVS
- * @author Clément Vacheron
+ * @author Overscan
  * @link https://www.overscan.com
  * Main Entity class
  * @since 1
