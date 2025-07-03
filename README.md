@@ -8,7 +8,7 @@ Dans le dossier "mu-plugins" créer un fichier _"ovs.php"_. Ajouter le code suiv
 <?php
 /**
  * Plugin Name: Ovs
- * Description: Plugin personnalisé d'Overscan pour Wordpress
+ * Description: Utilitaire pour faciliter la création de custom Post type, Taxonomies et Metabox dans Wordpress
  * Plugin URI:  https://www.overscan.com/
  * Version:     1
  * Author:      Overscan

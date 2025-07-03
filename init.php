@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Ovs Entity
- * Description: Plugin prsonnalisé d'Overscan pour Wordpress
+ * Plugin Name: OVS WP Entity
+ * Description: Utilitaire pour faciliter la création de Custom Post type, Taxonomies et Metabox dans Wordpress
  * Plugin URI:  https://www.overscan.com/
  * Version:     1
- * Author:      Clément Vacheron
+ * Author:      Overscan
  * Author URI:  https://www.overscan.com/
  * Text Domain: ovs
  * License: GPL v3 or later
