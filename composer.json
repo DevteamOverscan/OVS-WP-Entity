@@ -1,7 +1,6 @@
 {
     "name": "ovs/ovs-wp-entity",
     "type": "wordpress-muplugin",
-    "version": "1.0.0",
     "description": "Utilitaire pour faciliter la création de custom Post type, Taxonomies et Metabox dans Wordpress",
     "autoload": {
         "psr-4": {
