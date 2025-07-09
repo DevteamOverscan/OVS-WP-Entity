@@ -105,7 +105,7 @@ if (!class_exists('Taxonomy')) {
             return $this;
         }
 
-        public function __construct($taxonomy, $settings = [], $postId)
+        public function __construct($taxonomy, $postId, $settings = [])
         {
             $defaults = [
                 'name' => $taxonomy,
