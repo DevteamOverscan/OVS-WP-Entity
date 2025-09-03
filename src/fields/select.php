@@ -54,12 +54,10 @@ if(!class_exists('Field_select')) {
                 echo '<select id="' . esc_attr($this->getId()) . '" name="' . esc_attr($name) . '" ' . esc_attr($required) . '">';
                 echo '<option value="">' . $placeholder . '</option>';
                 if($options) {
-                    $i = 1;
                     foreach($options as $opt) {
                         $v = str_replace(' ', '_', $opt);
-                        $v = $i . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $v);
+                        $v = preg_replace('/[^a-zA-Z0-9]/', '', $v);
                         echo '<option value="' . $v . '" ' . selected($this->getValue(), $v, false) . '>' . $opt . '</option>';
-                        $i++;
                     }
                 }
                 echo '</select>';
