@@ -165,6 +165,8 @@ if (!class_exists('Taxonomy')) {
                 'public'           => $this->getPublic(),
                 'show_ui'          => true,
                 'show_admin_column'=> true,
+                'show_in_quick_edit' => true,
+                'show_in_rest' => true,
             );
         
             register_taxonomy(
