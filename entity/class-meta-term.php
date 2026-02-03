@@ -127,7 +127,7 @@ if (!class_exists('Meta_Taxonomy')) {
             }
 
             // Check if the current user has permission to edit the term
-            $taxonomy = get_taxonomy($term_id)->taxonomy;
+            $taxonomy = get_taxonomy($this->getTaxonomy());
             if (!current_user_can($taxonomy->cap->edit_terms)) {
                 return $term_id;
             }
