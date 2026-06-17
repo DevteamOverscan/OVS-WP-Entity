@@ -164,9 +164,6 @@ if (!class_exists('Post_Type')) {
             // se déclenche après la fin du chargement de WordPress mais avant l'envoi des en-têtes
             add_action('init', array($this, 'register'));
 
-            if(is_admin()) {
-                new MetaBox($this->getId(), $this->getId() . '_settings', $this->getName() . ' Options', 'normal', 'high', $this->getFields(), array('options'));
-            }
             // Si un template est définis pour ce post dans le dossier templates il sera affiché. Sinon par défaut se sera le template de Wordpress ou du thème
             add_filter('single_template', array($this,'singleTemplate'));
 
