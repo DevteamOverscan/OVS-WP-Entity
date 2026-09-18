@@ -43,7 +43,7 @@ if(!class_exists('Field_select')) {
         public function render()
         {
             $required = $this->getRequired() ? 'required' : '';
-            $placeholder = !empty($this->getPlaceholder()) ? 'placeholder="' . $this->getPlaceholder() . '"' : '--';
+            $placeholder = !empty($this->getPlaceholder()) ? $this->getPlaceholder() : '--';
             $name = !empty($this->getName()) ? $this->getName() : $this->getId();
             $options = !empty($this->getOptions()) ? $this->getOptions() : false;
             if(!empty($this->getId())) {
