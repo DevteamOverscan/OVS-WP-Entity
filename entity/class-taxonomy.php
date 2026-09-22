@@ -24,6 +24,7 @@ if (!class_exists('Taxonomy')) {
         protected $parent = true; // Active le système de hiérarchie de la taxonomy
         protected $public = true; // Rend la taxonomie publique
         protected $postId = ''; // l'id du postType lié à la taxonomy
+        protected $default_term = []; // terme crée automatiquement et qui sera assigné par défaut si on en choissis aucun
         protected $fields = [];
 
 
@@ -94,6 +95,17 @@ if (!class_exists('Taxonomy')) {
             return $this;
         }
 
+        public function getDefaultTerm()
+        {
+            return $this->default_term;
+        }
+
+        public function setDefaultTerm($default_term)
+        {
+            $this->default_term = $default_term;
+            return $this;
+        }
+
         public function getFields()
         {
             return $this->fields;
@@ -105,6 +117,8 @@ if (!class_exists('Taxonomy')) {
             return $this;
         }
 
+
+
         public function __construct($taxonomy, $postId, $settings = [])
         {
             $defaults = [
@@ -112,6 +126,7 @@ if (!class_exists('Taxonomy')) {
                 'isFeminin' => false,
                 'parent' => true,
                 'public' => true,
+                'default_term' => [],
                 'fields' => [],
             ];
 
@@ -124,6 +139,7 @@ if (!class_exists('Taxonomy')) {
             $this->setPostId($postId);
             $this->setParent($settings['parent']);
             $this->setPublic($settings['public']);
+            $this->setDefaultTerm($settings['default_term']);
             $this->setFields($settings['fields']);
 
             $this->addTaxonomy();
@@ -140,11 +156,11 @@ if (!class_exists('Taxonomy')) {
                 'name' => esc_html__($this->getName(), 'ovs'),
                 'singular_name' => esc_html__($this->getName(), 'ovs'),
                 'search_items' => esc_html__('Rechercher des ' . $name_lower, 'ovs'),
-                'all_items' => $feminin 
-                    ? esc_html__('Toutes les ' . $name_lower, 'ovs') 
+                'all_items' => $feminin
+                    ? esc_html__('Toutes les ' . $name_lower, 'ovs')
                     : esc_html__('Tous les ' . $name_lower, 'ovs'),
-                'parent_item' => $this->getParent() 
-                    ? esc_html__($name_lower . ' parent', 'ovs') 
+                'parent_item' => $this->getParent()
+                    ? esc_html__($name_lower . ' parent', 'ovs')
                     : null,
                 'edit_item' => $feminin
                     ? esc_html__('Modifier la ' . $name_lower, 'ovs')
@@ -158,29 +174,30 @@ if (!class_exists('Taxonomy')) {
                     : esc_html__('Nom du nouveau ' . $name_lower, 'ovs'),
                 'menu_name' => esc_html__($this->getName(), 'ovs')
             ];
-        
+
             $args = array(
                 'labels'            => $labels,
                 'hierarchical'     => $this->getParent(),
                 'public'           => $this->getPublic(),
                 'show_ui'          => true,
-                'show_admin_column'=> true,
+                'show_admin_column' => true,
                 'show_in_quick_edit' => true,
                 'show_in_rest' => true,
+                'default_term' => $this->getDefaultTerm(),
             );
-        
+
             register_taxonomy(
                 $this->getPostId() . '_' . $this->getId(),
                 $this->getPostId(),
                 $args
             );
-        
+
             if (!empty($this->getFields())) {
                 $taxoId = $this->getPostId() . '_' . $this->getId();
                 $meta = new Meta_Taxonomy($taxoId, $this->getFields());
             }
         }
-        
+
         public function editTaxonomy($id, $name, $parent = true, $fields = [])
         {
             $this->setId($id);
