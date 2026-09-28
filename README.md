@@ -39,3 +39,23 @@ if(get_option('custom_plugins') !== false) {
     }
 }
 ```
+
+## Partager une taxonomie entre plusieurs post types
+
+Une taxonomie est déclarée dans le post type principal. Son slug est préfixé par ce post type (`{postType}_{taxonomy}`). L'option `post_types` la rattache aussi à d'autres post types, qui partagent alors les mêmes termes :
+
+```php
+new Post_Type([
+    'id' => 'projet',
+    'name' => 'Projets',
+    'taxonomies' => [
+        'categorie' => [
+            'name' => 'Catégories',
+            'isFeminin' => true,
+            'post_types' => ['actu', 'evenement'], // taxonomie "projet_categorie" partagée
+        ],
+    ],
+]);
+```
+
+Ne redéclarez pas la taxonomie dans les autres post types : cela créerait des taxonomies distinctes (`actu_categorie`, ...).

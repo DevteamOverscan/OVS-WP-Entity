@@ -24,6 +24,7 @@ if (!class_exists('Taxonomy')) {
         protected $parent = true; // Active le système de hiérarchie de la taxonomy
         protected $public = true; // Rend la taxonomie publique
         protected $postId = ''; // l'id du postType lié à la taxonomy
+        protected $postTypes = []; // postTypes supplémentaires auxquels la taxonomy est rattachée
         protected $default_term = []; // terme crée automatiquement et qui sera assigné par défaut si on en choissis aucun
         protected $fields = [];
 
@@ -37,6 +38,12 @@ if (!class_exists('Taxonomy')) {
         {
             $this->id = $id;
             return $this;
+        }
+
+        // Slug réel de la taxonomy enregistrée dans WordPress : {postType}_{id}
+        public function getSlug()
+        {
+            return $this->getPostId() . '_' . $this->getId();
         }
 
         public function getName()
@@ -95,6 +102,17 @@ if (!class_exists('Taxonomy')) {
             return $this;
         }
 
+        public function getPostTypes()
+        {
+            return $this->postTypes;
+        }
+
+        public function setPostTypes($postTypes)
+        {
+            $this->postTypes = (array) $postTypes;
+            return $this;
+        }
+
         public function getDefaultTerm()
         {
             return $this->default_term;
@@ -127,6 +145,7 @@ if (!class_exists('Taxonomy')) {
                 'parent' => true,
                 'public' => true,
                 'default_term' => [],
+                'post_types' => [],
                 'fields' => [],
             ];
 
@@ -137,6 +156,7 @@ if (!class_exists('Taxonomy')) {
             $this->setName($settings['name']);
             $this->setIsFeminin($settings['isFeminin']);
             $this->setPostId($postId);
+            $this->setPostTypes($settings['post_types']);
             $this->setParent($settings['parent']);
             $this->setPublic($settings['public']);
             $this->setDefaultTerm($settings['default_term']);
@@ -187,14 +207,13 @@ if (!class_exists('Taxonomy')) {
             );
 
             register_taxonomy(
-                $this->getPostId() . '_' . $this->getId(),
-                $this->getPostId(),
+                $this->getSlug(),
+                array_values(array_unique(array_merge([$this->getPostId()], $this->getPostTypes()))),
                 $args
             );
 
             if (!empty($this->getFields())) {
-                $taxoId = $this->getPostId() . '_' . $this->getId();
-                $meta = new Meta_Taxonomy($taxoId, $this->getFields());
+                $meta = new Meta_Taxonomy($this->getSlug(), $this->getFields());
             }
         }
 
@@ -208,20 +227,33 @@ if (!class_exists('Taxonomy')) {
 
         public function removeTaxonomy()
         {
-            add_action('init', function () {
-                unregister_taxonomy($this->getId());
+            $remove = function () {
+                $slug = $this->getSlug();
 
-                $terms = get_terms($this->getId(), array('hide_empty' => false));
+                // Les termes doivent être supprimés avant de désenregistrer la taxonomy,
+                // sinon get_terms() et wp_delete_term() renvoient une erreur "taxonomie invalide"
+                $terms = get_terms(['taxonomy' => $slug, 'hide_empty' => false]);
 
-                foreach ($terms as $term) {
-                    wp_delete_term($term->term_id, $this->getId());
+                if (!is_wp_error($terms)) {
+                    foreach ($terms as $term) {
+                        wp_delete_term($term->term_id, $slug);
+                    }
                 }
-            });
+
+                unregister_taxonomy($slug);
+            };
+
+            // La taxonomy est enregistrée pendant 'init' : si on y est déjà, on supprime directement
+            if (did_action('init')) {
+                $remove();
+            } else {
+                add_action('init', $remove, 20);
+            }
         }
 
         public function archiveTemplate($default_template)
         {
-            $template = get_stylesheet_directory() . '/templates/taxonomy-' . $this->getPostId() . '_' . $this->getId() . '.php';
+            $template = get_stylesheet_directory() . '/templates/taxonomy-' . $this->getSlug() . '.php';
 
             if (file_exists($template)) {
                 return $template;
