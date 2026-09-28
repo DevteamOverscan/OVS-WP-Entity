@@ -25,6 +25,7 @@ if (!class_exists('Taxonomy')) {
         protected $public = true; // Rend la taxonomie publique
         protected $postId = ''; // l'id du postType lié à la taxonomy
         protected $postTypes = []; // postTypes supplémentaires auxquels la taxonomy est rattachée
+        protected $prefix = true; // Préfixe le slug de la taxonomy avec l'id du postType ({postType}_{id})
         protected $default_term = []; // terme crée automatiquement et qui sera assigné par défaut si on en choissis aucun
         protected $fields = [];
 
@@ -40,10 +41,21 @@ if (!class_exists('Taxonomy')) {
             return $this;
         }
 
-        // Slug réel de la taxonomy enregistrée dans WordPress : {postType}_{id}
+        // Slug réel de la taxonomy enregistrée dans WordPress : {postType}_{id}, ou {id} si le préfixe est désactivé
         public function getSlug()
         {
-            return $this->getPostId() . '_' . $this->getId();
+            return $this->getPrefix() ? $this->getPostId() . '_' . $this->getId() : $this->getId();
+        }
+
+        public function getPrefix(): bool
+        {
+            return $this->prefix;
+        }
+
+        public function setPrefix(bool $prefix): self
+        {
+            $this->prefix = $prefix;
+            return $this;
         }
 
         public function getName()
@@ -146,6 +158,7 @@ if (!class_exists('Taxonomy')) {
                 'public' => true,
                 'default_term' => [],
                 'post_types' => [],
+                'prefix' => true,
                 'fields' => [],
             ];
 
@@ -157,6 +170,7 @@ if (!class_exists('Taxonomy')) {
             $this->setIsFeminin($settings['isFeminin']);
             $this->setPostId($postId);
             $this->setPostTypes($settings['post_types']);
+            $this->setPrefix($settings['prefix']);
             $this->setParent($settings['parent']);
             $this->setPublic($settings['public']);
             $this->setDefaultTerm($settings['default_term']);

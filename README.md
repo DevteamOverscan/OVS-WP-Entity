@@ -59,3 +59,25 @@ new Post_Type([
 ```
 
 Ne redéclarez pas la taxonomie dans les autres post types : cela créerait des taxonomies distinctes (`actu_categorie`, ...).
+
+### Désactiver le préfixe du slug
+
+Par défaut, le slug de la taxonomie est préfixé par le post type qui la déclare (`projet_categorie`). Pour une taxonomie partagée, ce préfixe n'a souvent plus de sens. L'option `'prefix' => false` utilise la clé telle quelle comme slug :
+
+```php
+'taxonomies' => [
+    'equipment_type' => [
+        'name' => 'Types d\'équipement',
+        'prefix' => false,              // slug : "equipment_type" au lieu de "equipment_equipment_type"
+        'post_types' => ['actu'],
+    ],
+],
+```
+
+Le template d'archive suit le slug : `templates/taxonomy-equipment_type.php`.
+
+> ⚠️ Changer le slug d'une taxonomie existante détache ses termes en base : ils restent enregistrés sous l'ancien slug. Il faut les migrer (voir ci-dessous).
+
+```sql
+UPDATE wp_term_taxonomy SET taxonomy = 'equipment_type' WHERE taxonomy = 'equipment_equipment_type';
+```
