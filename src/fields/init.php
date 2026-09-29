@@ -25,6 +25,7 @@ $roots_includes = array(
         'docutheque',
         'gallery-img',
         'color',
+        'relation',
         );
 
 if (is_dir($pluginPath)) {

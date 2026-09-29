@@ -193,34 +193,34 @@ if (!class_exists('Post_Type')) {
             $name_lower = mb_strtolower($name); // Pour utilisation dans les libellés
         
             $labels = [
-                'name' => esc_html__($name, 'ovs'),
-                'singular_name' => esc_html__($name, 'ovs'),
-                'add_new' => esc_html__('Ajouter', 'ovs'),
+                'name' => __($name, 'ovs'),
+                'singular_name' => __($name, 'ovs'),
+                'add_new' => __('Ajouter', 'ovs'),
                 'add_new_item' => $feminin
-                    ? esc_html__('Ajouter une ' . $name_lower, 'ovs')
-                    : esc_html__('Ajouter un ' . $name_lower, 'ovs'),
+                    ? __('Ajouter une ' . $name_lower, 'ovs')
+                    : __('Ajouter un ' . $name_lower, 'ovs'),
                 'edit_item' => $feminin
-                    ? esc_html__('Modifier la ' . $name_lower, 'ovs')
-                    : esc_html__('Modifier le ' . $name_lower, 'ovs'),
+                    ? __('Modifier la ' . $name_lower, 'ovs')
+                    : __('Modifier le ' . $name_lower, 'ovs'),
                 'new_item' => $feminin
-                    ? esc_html__('Nouvelle ' . $name_lower, 'ovs')
-                    : esc_html__('Nouveau ' . $name_lower, 'ovs'),
+                    ? __('Nouvelle ' . $name_lower, 'ovs')
+                    : __('Nouveau ' . $name_lower, 'ovs'),
                 'view_item' => $feminin
-                    ? esc_html__('Voir la ' . $name_lower, 'ovs')
-                    : esc_html__('Voir le ' . $name_lower, 'ovs'),
+                    ? __('Voir la ' . $name_lower, 'ovs')
+                    : __('Voir le ' . $name_lower, 'ovs'),
                 'search_items' => $feminin
-                    ? esc_html__('Rechercher des ' . $name_lower, 'ovs')
-                    : esc_html__('Rechercher des ' . $name_lower, 'ovs'),
+                    ? __('Rechercher des ' . $name_lower, 'ovs')
+                    : __('Rechercher des ' . $name_lower, 'ovs'),
                 'not_found' => $feminin
-                    ? esc_html__('Aucune ' . $name_lower . ' trouvée', 'ovs')
-                    : esc_html__('Aucun ' . $name_lower . ' trouvé', 'ovs'),
+                    ? __('Aucune ' . $name_lower . ' trouvée', 'ovs')
+                    : __('Aucun ' . $name_lower . ' trouvé', 'ovs'),
                 'not_found_in_trash' => $feminin
-                    ? esc_html__('Aucune ' . $name_lower . ' dans la corbeille', 'ovs')
-                    : esc_html__('Aucun ' . $name_lower . ' dans la corbeille', 'ovs'),
-                'menu_name' => esc_html__($name, 'ovs'),
+                    ? __('Aucune ' . $name_lower . ' dans la corbeille', 'ovs')
+                    : __('Aucun ' . $name_lower . ' dans la corbeille', 'ovs'),
+                'menu_name' => __($name, 'ovs'),
                 'all_items' => $feminin
-                    ? esc_html__('Toutes les ' . $name_lower, 'ovs')
-                    : esc_html__('Tous les ' . $name_lower, 'ovs'),
+                    ? __('Toutes les ' . $name_lower, 'ovs')
+                    : __('Tous les ' . $name_lower, 'ovs'),
             ];
         
             $args = array(

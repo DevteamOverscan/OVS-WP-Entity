@@ -164,6 +164,13 @@ if (!class_exists('MetaBox')) {
                     } else {
                         continue;
                     }
+
+                    // Nettoyage propre au type de champ (ex : relation => IDs)
+                    $fieldClass = 'Field_' . strtolower($field['type'] ?? '');
+                    if (class_exists($fieldClass)) {
+                        $new = (new $fieldClass($field))->sanitize($new);
+                    }
+
                     $old = get_post_meta($post_id, $field['id'], true);
 
                     if (isset($new) && ($new != $old)) {
@@ -234,6 +241,9 @@ if (!class_exists('MetaBox')) {
                                 case 'array':
                                     $type = 'array';
                                     break;
+                                case 'relation':
+                                    $type = (isset($field['multiple']) && !$field['multiple']) ? 'string' : 'array';
+                                    break;
                                 case 'text':
                                 case 'textarea':
                                 default:
@@ -243,8 +253,19 @@ if (!class_exists('MetaBox')) {
                             
                         }
         
+                        // Un meta de type "array" exposé en REST doit décrire ses éléments
+                        $showInRest = true;
+                        if ($type === 'array') {
+                            $showInRest = [
+                                'schema' => [
+                                    'type' => 'array',
+                                    'items' => ['type' => $field['rest_items'] ?? 'string'],
+                                ],
+                            ];
+                        }
+
                         register_post_meta($this->post_type, $field['id'], [
-                            'show_in_rest' => true,
+                            'show_in_rest' => $showInRest,
                             'single' => true,
                             'type' => $type,
                             'auth_callback' => '__return_true'

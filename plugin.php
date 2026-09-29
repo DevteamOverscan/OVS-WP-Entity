@@ -71,6 +71,7 @@ class Entity
         // JS
         wp_enqueue_script('upload-media', plugin_dir_url(__FILE__) . '/assets/js/uploadMedia.js', null, false, true);
         wp_enqueue_script('upload-multi-media', plugin_dir_url(__FILE__) . '/assets/js/uploadMultiMedia.js', null, false, true);
+        wp_enqueue_script('relation-field', plugin_dir_url(__FILE__) . '/assets/js/relationField.js', null, filemtime(plugin_dir_path(__FILE__) . 'assets/js/relationField.js'), true);
         //CSS
         wp_enqueue_style('admin-icon', plugin_dir_url(__FILE__) . '/assets/pictofont/style.css', false, '1.0.0');
         wp_enqueue_style('admin-form', plugin_dir_url(__FILE__) . '/assets/css/admin-form.css', array(), filemtime(plugin_dir_path(__FILE__) . 'assets/css/admin-form.css'));

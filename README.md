@@ -81,3 +81,30 @@ Le template d'archive suit le slug : `templates/taxonomy-equipment_type.php`.
 ```sql
 UPDATE wp_term_taxonomy SET taxonomy = 'equipment_type' WHERE taxonomy = 'equipment_equipment_type';
 ```
+
+## Champ relation
+
+Lie un contenu à d'autres contenus (un ou plusieurs post types), par exemple les moyens mobilisés par une prestation.
+
+```php
+new MetaBox('offer', 'offer_equipment', 'Moyens mobilisés', 'normal', 'default', [
+    [
+        'id'        => 'related_equipment',
+        'type'      => 'relation',
+        'label'     => 'Moyens mobilisés',
+        'post_type' => 'equipment',   // string ou tableau
+        'multiple'  => true,          // false : liste déroulante, un seul contenu
+        'column'    => true,          // affiche les titres dans la liste de l'admin
+    ],
+]);
+```
+
+Les IDs sont enregistrés en tableau de chaînes. Côté front :
+
+```php
+// Moyens liés à la prestation, dans l'ordre enregistré
+$equipments = Field_relation::getPosts(get_the_ID(), 'related_equipment', 'equipment');
+
+// Requête inverse : prestations qui utilisent ce moyen
+$offers = Field_relation::getReferencing(get_the_ID(), 'related_equipment', 'offer');
+```

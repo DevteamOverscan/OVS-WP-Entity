@@ -221,6 +221,14 @@ if (!class_exists('Field')) {
             //The way is closed, it was made by those who died; and the dead guard it… the way is closed
         }
 
+        /**
+         * Nettoie la valeur envoyée avant enregistrement. À surcharger dans les champs qui en ont besoin.
+         */
+        public function sanitize($value)
+        {
+            return $value;
+        }
+
         public function columnContent()
         {
             $content = '<div>' . $this->getValue() . '</div>';

@@ -184,29 +184,29 @@ if (!class_exists('Taxonomy')) {
         public function addTaxonomy()
         {
             $feminin = $this->isFeminin();
-            $name_lower = strtolower($this->getName());
+            $name_lower = mb_strtolower($this->getName());
 
             $labels = [
-                'name' => esc_html__($this->getName(), 'ovs'),
-                'singular_name' => esc_html__($this->getName(), 'ovs'),
-                'search_items' => esc_html__('Rechercher des ' . $name_lower, 'ovs'),
+                'name' => __($this->getName(), 'ovs'),
+                'singular_name' => __($this->getName(), 'ovs'),
+                'search_items' => __('Rechercher des ' . $name_lower, 'ovs'),
                 'all_items' => $feminin
-                    ? esc_html__('Toutes les ' . $name_lower, 'ovs')
-                    : esc_html__('Tous les ' . $name_lower, 'ovs'),
+                    ? __('Toutes les ' . $name_lower, 'ovs')
+                    : __('Tous les ' . $name_lower, 'ovs'),
                 'parent_item' => $this->getParent()
-                    ? esc_html__($name_lower . ' parent', 'ovs')
+                    ? __($name_lower . ' parent', 'ovs')
                     : null,
                 'edit_item' => $feminin
-                    ? esc_html__('Modifier la ' . $name_lower, 'ovs')
-                    : esc_html__('Modifier le ' . $name_lower, 'ovs'),
-                'update_item' => esc_html__('Mettre à jour', 'ovs'),
+                    ? __('Modifier la ' . $name_lower, 'ovs')
+                    : __('Modifier le ' . $name_lower, 'ovs'),
+                'update_item' => __('Mettre à jour', 'ovs'),
                 'add_new_item' => $feminin
-                    ? esc_html__('Ajouter une nouvelle ' . $name_lower, 'ovs')
-                    : esc_html__('Ajouter un nouveau ' . $name_lower, 'ovs'),
+                    ? __('Ajouter une nouvelle ' . $name_lower, 'ovs')
+                    : __('Ajouter un nouveau ' . $name_lower, 'ovs'),
                 'new_item_name' => $feminin
-                    ? esc_html__('Nom de la nouvelle ' . $name_lower, 'ovs')
-                    : esc_html__('Nom du nouveau ' . $name_lower, 'ovs'),
-                'menu_name' => esc_html__($this->getName(), 'ovs')
+                    ? __('Nom de la nouvelle ' . $name_lower, 'ovs')
+                    : __('Nom du nouveau ' . $name_lower, 'ovs'),
+                'menu_name' => __($this->getName(), 'ovs')
             ];
 
             $args = array(
