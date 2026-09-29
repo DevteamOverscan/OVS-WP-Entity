@@ -31,6 +31,7 @@ if (!class_exists('Post_Type')) {
         protected $fields = [];
         protected $publicly_queryable = true; 
         protected $has_archive = true; 
+        protected $show_in_menu = true; // true, false (ex : regroupé dans un Admin_Menu) ou slug d'un menu parent
 
         protected function setName($value)
         {
@@ -98,6 +99,16 @@ if (!class_exists('Post_Type')) {
             return $this->has_archive;
         }
 
+        protected function setShowInMenu($value)
+        {
+            $this->show_in_menu = $value;
+            return $this->show_in_menu;
+        }
+        public function getShowInMenu()
+        {
+            return $this->show_in_menu;
+        }
+
         protected function setTaxonomies($value = array())
         {
             $this->taxonomies = $value;
@@ -140,6 +151,7 @@ if (!class_exists('Post_Type')) {
                 'icon' => 'dashicons-admin-page',
                 'publicly_queryable' => true,
                 'has_archive' => true,
+                'show_in_menu' => true,
                 'taxonomies' => [],
                 'fields' => []
             ];
@@ -155,6 +167,7 @@ if (!class_exists('Post_Type')) {
             $this->setRewriteSlug(!empty($args['rewriteSlug']) ? $args['rewriteSlug'] : "");
             $this->setPubliclyQueryable($args['publicly_queryable']);
             $this->setHasArchive($args['has_archive']);
+            $this->setShowInMenu($args['show_in_menu']);
             $this->setTaxonomies($args['taxonomies']);
 
             if($args['fields']) {
@@ -215,6 +228,7 @@ if (!class_exists('Post_Type')) {
                 'menu_icon' => $this->getIcon(),
                 'publicly_queryable' => $this->getPubliclyQueryable(),
                 'show_ui' => true,
+                'show_in_menu' => $this->getShowInMenu(),
                 'has_archive' => $this->getHasArchive(),
                 'show_in_rest' => true,
                 'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
